@@ -1,8 +1,61 @@
 #include <iostream>
 #include <limits>
 #include <cstdlib>
+#include <string>
 using namespace std;
 
+// Function to check if input is a valid numeric string
+bool isValidNum(const string &input)
+{
+    bool Decimal = false;
+
+    for (char ch : input)
+    {
+        if (ch == '.')
+        {
+            if (Decimal)
+            {
+                return false;
+            }
+            Decimal = true;
+        }
+        else if (!isdigit(ch))
+        {
+            return false;
+        }
+    }
+    return !input.empty();
+}
+
+// Function to get a valid amount from the user
+void getValidAmount(double &amount)
+{
+    string input;
+    while (true)
+    {
+        cout << "\nEnter amount: ";
+        cin >> input;
+
+        if (isValidNum(input))
+        {
+            amount = stod(input);
+            if (amount <= 0)
+            {
+                cout << "Error: Amount must be greater than zero." << endl;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            cout << "Error: Please enter a valid positive numeric amount." << endl;
+        }
+    }
+}
+
+// function to clear and pause screen
 void clearScreen();
 void pause();
 
@@ -36,11 +89,6 @@ public:
     // function for deposit
     void deposit(double amount) override
     {
-        if (amount <= 0)
-        {
-            cout << "Error: Deposit amount should be greater than zero." << endl;
-            return;
-        }
         setBalance(getBalance() + amount);
         cout << "\nYou deposited " << amount;
         cout << "\nYour new balance is " << getBalance() << endl;
@@ -49,11 +97,6 @@ public:
     // function for withdraw
     void withdraw(double amount) override
     {
-        if (amount <= 0)
-        {
-            cout << "Error: Withdrawal amount should be greater than zero." << endl;
-            return;
-        }
         if (amount > getBalance())
         {
             cout << "Error: Insufficient funds." << endl;
@@ -67,8 +110,8 @@ public:
     // function to display the current account menu
     void menu() override
     {
-        int subChoice = 0;
-        while (subChoice != 4)
+        string subChoice;
+        while (subChoice != "4")
         {
             clearScreen();
             cout << "\n--- Current Account Menu ---\n";
@@ -81,53 +124,31 @@ public:
 
             clearScreen();
 
-            // switch statement
-            switch (subChoice)
-            {
-            case 1:
+            if (subChoice == "1")
             {
                 double amount;
-                cout << "Enter the amount you want to deposit: ";
-
-                while (!(cin >> amount))
-                {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Please enter a valid amount: ";
-                }
-
+                getValidAmount(amount);
                 deposit(amount);
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 pause();
-                break;
             }
-            case 2:
+            else if (subChoice == "2")
             {
                 double amount;
-                cout << "Enter the amount you want to withdraw: ";
-
-                while (!(cin >> amount))
-                {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Please enter a valid amount: ";
-                }
-
+                getValidAmount(amount);
                 withdraw(amount);
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 pause();
-                break;
             }
-            case 3:
+            else if (subChoice == "3")
+            {
                 cout << "\nYour balance is " << getBalance() << endl;
                 pause();
-                break;
-            case 4:
+            }
+            else if (subChoice == "4")
+            {
                 cout << "Returning to main menu..." << endl;
-                break;
-            default:
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+            else
+            {
                 cout << "Invalid choice. Please try again." << endl;
                 pause();
             }
@@ -146,23 +167,14 @@ public:
     // function for deposit
     void deposit(double amount) override
     {
-        if (amount <= 0)
-        {
-            cout << "Error: Deposit amount should be greater than zero." << endl;
-            return;
-        }
         setBalance(getBalance() + amount);
         cout << "You have deposited " << amount;
         cout << "\nYour new balance is " << getBalance() << endl;
     }
+
     // function for withdraw
     void withdraw(double amount) override
     {
-        if (amount <= 0)
-        {
-            cout << "Error: Withdrawal amount should be greater than zero." << endl;
-            return;
-        }
         if (amount > getBalance())
         {
             cout << "Error: Insufficient funds." << endl;
@@ -178,11 +190,12 @@ public:
         cout << "You withdrew " << amount;
         cout << "\nYour new balance is " << getBalance() << endl;
     }
+
     // function to display the menu for saving
     void menu() override
     {
-        int subChoice = 0;
-        while (subChoice != 4)
+        string subChoice;
+        while (subChoice != "4")
         {
             clearScreen();
             cout << "\n--- Saving Account Menu ---\n";
@@ -195,52 +208,31 @@ public:
 
             clearScreen();
 
-            switch (subChoice)
-            {
-            case 1:
+            if (subChoice == "1")
             {
                 double amount;
-                cout << "Enter the amount you want to deposit: ";
-
-                while (!(cin >> amount))
-                {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Please enter a valid amount: ";
-                }
-
+                getValidAmount(amount);
                 deposit(amount);
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 pause();
-                break;
             }
-            case 2:
+            else if (subChoice == "2")
             {
                 double amount;
-                cout << "Enter the amount you want to withdraw: ";
-
-                while (!(cin >> amount))
-                {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Please enter a valid amount: ";
-                }
-
+                getValidAmount(amount);
                 withdraw(amount);
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 pause();
-                break;
             }
-            case 3:
+            else if (subChoice == "3")
+            {
                 cout << "Your balance is " << getBalance() << endl;
                 pause();
-                break;
-            case 4:
+            }
+            else if (subChoice == "4")
+            {
                 cout << "Returning to main menu..." << endl;
-                break;
-            default:
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+            else
+            {
                 cout << "Invalid choice. Please try again." << endl;
                 pause();
             }
@@ -269,11 +261,11 @@ void pause()
 int main()
 {
     const double minimumBalanceSaving = 1000;
-    int choice = 0;
+    string choice;
     CurrentAccount current;
     SavingAccount saving(minimumBalanceSaving);
 
-    while (choice != 3)
+    while (choice != "3")
     {
         clearScreen();
         cout << "\n--- Main Menu ---\n";
@@ -285,20 +277,20 @@ int main()
 
         clearScreen();
 
-        switch (choice)
+        if (choice == "1")
         {
-        case 1:
             saving.menu();
-            break;
-        case 2:
+        }
+        else if (choice == "2")
+        {
             current.menu();
-            break;
-        case 3:
+        }
+        else if (choice == "3")
+        {
             cout << "Thank you!" << endl;
-            break;
-        default:
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else
+        {
             cout << "Invalid choice. Please try again." << endl;
             pause();
         }
